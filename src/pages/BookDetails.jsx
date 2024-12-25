@@ -1,9 +1,12 @@
 import React from 'react';
+import BooksDetails from '../components/BooksDetails.jsx';
 
 const BookDetails = () => {
   return (
     <div>
-      <h2>BookDetails Component</h2>
+      <section>
+        <BooksDetails></BooksDetails>
+      </section>
     </div>
   );
 };

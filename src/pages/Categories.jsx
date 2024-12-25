@@ -1,7 +1,9 @@
+import BookCategories from '../components/BookCategories';
+
 const Categories = () => {
   return (
     <div>
-      <h2>This is Categories</h2>
+      <BookCategories></BookCategories>
     </div>
   );
 };

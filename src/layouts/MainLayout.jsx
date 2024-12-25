@@ -4,9 +4,13 @@ import Navbar from '../components/Navbar';
 
 const MainLayout = () => {
   return (
-    <div className="max-w-7xl mx-auto">
-      <Navbar></Navbar>
-      <Outlet></Outlet>
+    <div className="w-full lg:w-11/12 mx-auto">
+      <nav>
+        <Navbar></Navbar>
+      </nav>
+      <main className="min-h-screen">
+        <Outlet></Outlet>
+      </main>
       <Footer></Footer>
     </div>
   );

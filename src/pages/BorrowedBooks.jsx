@@ -1,9 +1,12 @@
 import React from 'react';
+import BorrowBook from '../components/BorrowBook';
 
 const BorrowedBooks = () => {
   return (
     <div>
-      <h2>Thi is BorrowedBooks</h2>
+      <section>
+        <BorrowBook></BorrowBook>
+      </section>
     </div>
   );
 };

@@ -1,7 +1,15 @@
+import Banner from '../components/Banner';
+import BookCategories from '../components/BookCategories';
+
 const Home = () => {
   return (
     <div>
-      <h2>This is Home</h2>
+      <section>
+        <Banner></Banner>
+      </section>
+      <section>
+        <BookCategories></BookCategories>
+      </section>
     </div>
   );
 };

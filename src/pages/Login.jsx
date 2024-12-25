@@ -91,11 +91,11 @@ const Login = () => {
     setShowPassword((prevState) => !prevState);
 
   return (
-    <div className="h-full bg-[#F7F8FA] flex justify-center items-center py-4 lg:py-10">
+    <div className="h-full bg-neutral flex justify-center items-center py-4 lg:py-10">
       <div className="card bg-white shadow-sm w-full max-w-md p-8 rounded-lg">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold mt-4">
-            Log In to Visa Navigator
+          <h2 className="text-2xl font-semibold text-primary mt-4">
+            Welcome to EduShelf
           </h2>
         </div>
 
@@ -103,7 +103,7 @@ const Login = () => {
         <div className="flex justify-center mb-6">
           <button
             onClick={handleGoogleLogin}
-            className="btn w-full bg-base-100 border hover:bg-white  flex items-center justify-center py-2"
+            className="btn w-full bg-base-100 border hover:bg-secondary  flex items-center justify-center py-2"
           >
             <FcGoogle className="mr-2" size={20} />
             Sign In with Google
@@ -112,16 +112,16 @@ const Login = () => {
 
         {/* Separator */}
         <div className="flex items-center my-4">
-          <hr className="w-full border-t border-gray-300" />
-          <span className="mx-2 text-gray-500">or </span>
-          <hr className="w-full border-t border-gray-300" />
+          <hr className="w-full border-t border-secondary" />
+          <span className="mx-2 text-textPrimary">or </span>
+          <hr className="w-full border-t border-secondary" />
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="form-control">
             <label className="label" htmlFor="email">
-              <span className="label-text">Email Address</span>
+              <span className="label-text text-primary">Email Address</span>
             </label>
             <input
               id="email"
@@ -137,7 +137,7 @@ const Login = () => {
           </div>
           <div className="form-control">
             <label className="label" htmlFor="password">
-              <span className="label-text">Password</span>
+              <span className="label-text text-primary">Password</span>
             </label>
             <div className="relative">
               <input
@@ -152,35 +152,36 @@ const Login = () => {
               />
               <span
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-[33%] transform -translate-y-1/2 cursor-pointer"
+                className="absolute text-secondary right-3 top-[33%] transform -translate-y-1/2 cursor-pointer"
               >
                 {showPassword ? <HiEyeOff size={24} /> : <HiEye size={24} />}
               </span>
-              <div></div>
-              <label onClick={handleForgetPassword} className="label">
-                <a
-                  href="#"
-                  className="text-[#ec4899] label-text-alt link link-hover"
-                >
-                  Forgot password?
-                </a>
-              </label>
+              <div className="flex justify-end items-end pt-2">
+                <label onClick={handleForgetPassword} className="label">
+                  <a
+                    href="#"
+                    className="text-error label-text-alt link link-hover"
+                  >
+                    Forgot password?
+                  </a>
+                </label>
+              </div>
             </div>
           </div>
 
           <div className="form-control">
             <button
               type="submit"
-              className="btn bg-[#ec4899] text-white hover:bg-[#f954a6] w-full"
+              className="btn text-textPrimary hover:bg-secondary w-full"
             >
               Log In
             </button>
           </div>
         </form>
 
-        <p className="text-center mt-4">
+        <p className="text-center text-textSecondary mt-4">
           Don't have an account?{' '}
-          <Link className="text-[#ec4899] hover:underline" to="/register">
+          <Link className="text-primary hover:underline" to="/register">
             Register
           </Link>
         </p>

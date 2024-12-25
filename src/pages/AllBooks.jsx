@@ -1,9 +1,11 @@
-import React from 'react';
+import AllBook from '../components/AllBook';
 
 const AllBooks = () => {
   return (
     <div>
-      <h2>Thi is All BookS</h2>
+      <section>
+        <AllBook></AllBook>
+      </section>
     </div>
   );
 };

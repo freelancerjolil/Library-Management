@@ -1,10 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
+import AddBooks from '../components/AddBooks';
+import BookCategories from '../components/BookCategories';
+import BooksByCategory from '../components/BooksByCategory';
+import UpdateBooks from '../components/UpdateBooks';
 import MainLayout from '../layouts/MainLayout';
 import AddBook from '../pages/AddBook';
 import AllBooks from '../pages/AllBooks';
 import BookDetails from '../pages/BookDetails';
 import BorrowedBooks from '../pages/BorrowedBooks';
-import Categories from '../pages/Categories';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -22,7 +25,30 @@ const router = createBrowserRouter([
 
       {
         path: '/allbooks',
-        element: <AllBooks></AllBooks>,
+        element: (
+          <ProtectedRoute>
+            <AllBooks></AllBooks>
+          </ProtectedRoute>
+        ),
+        // loader: () =>
+        //   handleFetchError(fetch(`${API_URL}/books?page=0&size=10`)),
+      },
+      {
+        path: '/books',
+        element: (
+          <ProtectedRoute>
+            <AddBooks></AddBooks>
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: '/update-book/:id',
+        element: (
+          <ProtectedRoute>
+            <UpdateBooks></UpdateBooks>
+          </ProtectedRoute>
+        ),
         // loader: () =>
         //   handleFetchError(fetch(`${API_URL}/books?page=0&size=10`)),
       },
@@ -39,8 +65,13 @@ const router = createBrowserRouter([
       },
 
       {
-        path: '/categories',
-        element: <Categories></Categories>,
+        path: '/category',
+        element: <BookCategories></BookCategories>,
+        // loader: () => handleFetchError(fetch(`${API_URL}/categories`)),
+      },
+      {
+        path: '/category/:category',
+        element: <BooksByCategory></BooksByCategory>,
         // loader: () => handleFetchError(fetch(`${API_URL}/categories`)),
       },
 
@@ -60,14 +91,6 @@ const router = createBrowserRouter([
             <BorrowedBooks></BorrowedBooks>
           </ProtectedRoute>
         ),
-        // loader: async () =>
-        //   handleFetchError(
-        //     fetch(`${API_URL}/borrowed-books`, {
-        //       headers: {
-        //         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        //       },
-        //     })
-        //   ),
       },
 
       {

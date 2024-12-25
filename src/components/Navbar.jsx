@@ -22,7 +22,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar border-b-2">
+    <div className="navbar border-b-2 border-primary">
       {/* Navbar Start */}
       <div className="navbar-start flex items-center gap-4">
         <NavLink to="/" className="flex items-center gap-2">
@@ -33,47 +33,54 @@ const Navbar = () => {
       {/* Navbar Center (Desktop NavLinks) */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? 'px-4 py-2 text-lg font-bold text-[#ec4899]'
-                : 'px-4 py-2 text-lg font-semibold hover:text-[#ec4899]'
-            }
-          >
-            Home
-          </NavLink>
-
-          <NavLink
-            to="/allbooks"
-            className={({ isActive }) =>
-              isActive
-                ? 'px-4 py-2 text-lg font-bold text-[#ec4899]'
-                : 'px-4 py-2 text-lg font-semibold hover:text-[#ec4899]'
-            }
-          >
-            All Books
-          </NavLink>
-          <NavLink
-            to="/addbook"
-            className={({ isActive }) =>
-              isActive
-                ? 'px-4 py-2 text-lg font-bold text-[#ec4899]'
-                : 'px-4 py-2 text-lg font-semibold hover:text-[#ec4899]'
-            }
-          >
-            Add Book
-          </NavLink>
-          <NavLink
-            to="/borrowedbooks"
-            className={({ isActive }) =>
-              isActive
-                ? 'px-4 py-2 text-lg font-bold text-[#ec4899]'
-                : 'px-4 py-2 text-lg font-semibold hover:text-[#ec4899]'
-            }
-          >
-            Borrowed Books
-          </NavLink>
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? 'px-4 py-2 text-lg font-bold text-primary'
+                  : 'px-4 py-2 text-lg font-semibold hover:text-secondary'
+              }
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/allbooks"
+              className={({ isActive }) =>
+                isActive
+                  ? 'px-4 py-2 text-lg font-bold text-primary'
+                  : 'px-4 py-2 text-lg font-semibold hover:text-secondary'
+              }
+            >
+              All Books
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/addbook"
+              className={({ isActive }) =>
+                isActive
+                  ? 'px-4 py-2 text-lg font-bold text-textPrimary'
+                  : 'px-4 py-2 text-lg font-semibold hover:text-secondary'
+              }
+            >
+              Add Book
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/borrowedbooks"
+              className={({ isActive }) =>
+                isActive
+                  ? 'px-4 py-2 text-lg font-bold text-primary'
+                  : 'px-4 py-2 text-lg font-semibold hover:text-secondary'
+              }
+            >
+              Borrowed Books
+            </NavLink>
+          </li>
         </ul>
       </div>
 
@@ -81,14 +88,13 @@ const Navbar = () => {
       <div className="navbar-end flex items-center gap-2">
         {/* User Avatar */}
         {user && user.photoURL && (
-          <div className="relative">
-            <img
-              className="w-10 h-10 object-cover rounded-full hidden lg:block"
-              src={user.photoURL}
-              alt="User Avatar"
-            />
-            <div className="absolute bottom-0 left-0 bg-black text-white text-xs p-1 rounded-lg hidden lg:block hover:block">
-              {user.displayName}
+          <div className="relative hidden lg:block">
+            <div className="w-12 h-12 border-2 border-secondary rounded-full">
+              <img
+                className="object-cover w-full rounded-full"
+                src={user.photoURL}
+                alt="User Avatar"
+              />
             </div>
           </div>
         )}
@@ -97,7 +103,7 @@ const Navbar = () => {
         {user && user.email ? (
           <button
             onClick={handleLogout}
-            className="btn bg-[#134479] text-white hover:bg-[#1a5ca3] px-6 py-2 rounded hidden lg:block"
+            className="btn bg-error text-white hover:bg-primary px-6 py-2 rounded hidden lg:block"
           >
             Log-Out
           </button>
@@ -105,13 +111,13 @@ const Navbar = () => {
           <>
             <Link
               to="/signin"
-              className="px-6 py-2 bg-[#ec4899] text-white hover:bg-[#134479] rounded hidden lg:block"
+              className="px-6 py-2 bg-secondary text-white hover:bg-primary rounded hidden lg:block"
             >
               Login
             </Link>
             <Link
               to="/register"
-              className="px-6 py-2 bg-[#134479] text-white hover:bg-[#1a5ca3] rounded hidden lg:block"
+              className="px-6 py-2 bg-primary text-white hover:bg-secondary rounded hidden lg:block"
             >
               Register
             </Link>
@@ -121,46 +127,66 @@ const Navbar = () => {
         {/* Mobile Dropdown */}
         <div className="dropdown lg:hidden">
           <button className="btn btn-ghost" onClick={toggleMenu}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
+            {/* Show avatar or hamburger icon based on user authentication */}
+            {user && user.photoURL ? (
+              <div className="w-12 h-12 border-2 border-secondary rounded-full">
+                <img
+                  className="object-cover w-full rounded-full"
+                  src={user.photoURL}
+                  alt="User Avatar"
+                />
+              </div>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h8m-8 6h16"
+                />
+              </svg>
+            )}
           </button>
+
           {isOpen && (
             <ul
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[50] mt-3 w-52 p-2 shadow right-0"
               onClick={() => setIsOpen(false)}
             >
-              <NavLink to="/" className="block px-4 py-2">
-                Home
-              </NavLink>
+              <li>
+                <NavLink to="/" className="block px-4 py-2">
+                  Home
+                </NavLink>
+              </li>
               {user && (
                 <>
-                  <NavLink to="/allbooks" className="block px-4 py-2">
-                    All Books
-                  </NavLink>
-                  <NavLink to="/addbook" className="block px-4 py-2">
-                    Add Book
-                  </NavLink>
-                  <NavLink to="/borrowedbooks" className="block px-4 py-2">
-                    Borrowed Books
-                  </NavLink>
+                  <li>
+                    <NavLink to="/allbooks" className="block px-4 py-2">
+                      All Books
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/addbook" className="block px-4 py-2">
+                      Add Book
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/borrowedbooks" className="block px-4 py-2">
+                      Borrowed Books
+                    </NavLink>
+                  </li>
                 </>
               )}
               {user && user.email ? (
                 <button
                   onClick={handleLogout}
-                  className="btn bg-[#134479] text-white w-full mt-4"
+                  className="btn bg-error text-white w-full mt-4"
                 >
                   Log-Out
                 </button>
@@ -168,13 +194,13 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/signin"
-                    className="btn bg-[#134479] text-white w-full mt-4"
+                    className="btn bg-secondary text-white w-full mt-4"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="btn bg-[#ec4899] text-white w-full mt-4"
+                    className="btn bg-primary text-white w-full mt-4"
                   >
                     Register
                   </Link>
