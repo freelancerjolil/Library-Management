@@ -1,50 +1,50 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Category data with names and images
+const categories = [
+  {
+    name: 'Nobel',
+    image: 'https://i.ibb.co/wBDnR26/466630-booksbymuhammadyunus.jpg',
+  },
+  { name: 'Drama', image: 'https://i.ibb.co/PjHpjxK/images.jpg' },
+  {
+    name: 'History',
+    image: 'https://i.ibb.co/ZMG8NNh/Screenshot-2024-12-26-082051.png',
+  },
+  {
+    name: 'Thriller',
+    image:
+      'https://i.ibb.co/3NcPr8h/1-best-thriller-books-index-comp-649d9b68c3157.jpg',
+  },
+];
+
 const BookCategories = () => {
-  const [books, setBooks] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch book categories from the backend
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/books`);
-        // Ensure that you're correctly defining and using category
-        const books = response.data;
-        // Example: If you're filtering books by category:
-        const filteredBooks = books.filter(
-          (book) => book.category === 'someCategory'
-        );
-        setBooks(filteredBooks);
-      } catch (error) {
-        console.error('Failed to fetch books:', error);
-      }
-    };
-  }, []);
-
-  // Extract unique categories from the books data
-  const categories = [...new Set(books.map((book) => book.category))];
-
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {categories.map((category) => (
-        <div
-          key={category}
-          className="card cursor-pointer border rounded shadow-lg hover:shadow-xl transition"
-          onClick={() => navigate(`/category/${category}`)}
-          aria-label={`Go to ${category} category`}
-        >
-          <img
-            src={`/images/${category}.jpg`} // Default category images, ensure the correct path
-            alt={category}
-            onError={(e) => (e.target.src = '/images/fallback.jpg')} // Fallback image
-            className="w-full h-32 object-cover rounded-t"
-          />
-          <h3 className="text-center p-2 font-semibold">{category}</h3>
-        </div>
-      ))}
+    <div className="container mx-auto my-6">
+      <h1 className="text-2xl font-bold mb-8 text-center">
+        Explore Book Categories
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {categories.map((category, index) => (
+          <div
+            key={index}
+            className="card shadow-lg cursor-pointer"
+            onClick={() => navigate(`/category/${category.name}`)}
+          >
+            <img
+              src={category.image}
+              alt={category.name}
+              className="w-full h-40 object-cover rounded-t"
+            />
+            <div className="p-4 text-center">
+              <h2 className="text-lg font-bold">{category.name}</h2>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

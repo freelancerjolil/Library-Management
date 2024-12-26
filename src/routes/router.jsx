@@ -49,8 +49,16 @@ const router = createBrowserRouter([
             <UpdateBooks></UpdateBooks>
           </ProtectedRoute>
         ),
-        // loader: () =>
-        //   handleFetchError(fetch(`${API_URL}/books?page=0&size=10`)),
+      },
+
+      {
+        path: '/category',
+        element: <BookCategories></BookCategories>,
+      },
+
+      {
+        path: '/category/:category',
+        element: <BooksByCategory></BooksByCategory>,
       },
 
       {
@@ -60,19 +68,6 @@ const router = createBrowserRouter([
             <BookDetails></BookDetails>
           </ProtectedRoute>
         ),
-        // loader: ({ params }) =>
-        //   handleFetchError(fetch(`${API_URL}/books/${params.id}`)),
-      },
-
-      {
-        path: '/category',
-        element: <BookCategories></BookCategories>,
-        // loader: () => handleFetchError(fetch(`${API_URL}/categories`)),
-      },
-      {
-        path: '/category/:category',
-        element: <BooksByCategory></BooksByCategory>,
-        // loader: () => handleFetchError(fetch(`${API_URL}/categories`)),
       },
 
       {

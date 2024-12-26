@@ -4,7 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const AllBook = () => {
   const [books, setBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
   const [viewMode, setViewMode] = useState('card'); // Default view mode is 'card'
+  const [showAvailable, setShowAvailable] = useState(false); // State for filtering available books
   const navigate = useNavigate();
 
   // Fetch all books when the component mounts
@@ -15,6 +17,7 @@ const AllBook = () => {
           withCredentials: true, // To send cookies (JWT token) with the request
         });
         setBooks(response.data);
+        setFilteredBooks(response.data); // Initially, show all books
       } catch (error) {
         console.error('Error fetching books:', error);
       }
@@ -27,10 +30,28 @@ const AllBook = () => {
     setViewMode(e.target.value);
   };
 
+  // Handle the "Show Available Books" filter toggle
+  const handleFilterToggle = () => {
+    setShowAvailable((prev) => !prev);
+    if (showAvailable) {
+      setFilteredBooks(books); // Show all books if filter is off
+    } else {
+      setFilteredBooks(books.filter((book) => book.quantity > 0)); // Filter books with quantity > 0
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between mt-6">
         <h1 className="text-3xl font-bold text-primary mb-4">All Books</h1>
+
+        {/* Show Available Books Filter Button */}
+        <button
+          onClick={handleFilterToggle}
+          className="btn bg-primary hover:bg-secondary text-white mb-4"
+        >
+          {showAvailable ? 'Show All Books' : 'Show Available Books'}
+        </button>
 
         {/* View Mode Toggle Dropdown */}
         <div className="mb-4">
@@ -49,7 +70,7 @@ const AllBook = () => {
       {viewMode === 'card' ? (
         // Card View
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {books.map((book) => (
+          {filteredBooks.map((book) => (
             <div
               key={book._id}
               className="border rounded-lg p-4 flex flex-col justify-between"
@@ -64,6 +85,7 @@ const AllBook = () => {
                 <p className="text-sm">Author: {book.authorName}</p>
                 <p className="text-sm">Category: {book.category}</p>
                 <p className="text-sm">Rating: {book.rating}</p>
+                <p className="text-sm">Quantity: {book.quantity}</p>
               </div>
               <Link
                 to={`/update-book/${book._id}`}
@@ -88,7 +110,7 @@ const AllBook = () => {
             </tr>
           </thead>
           <tbody>
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <tr key={book._id}>
                 <td className="border px-4 py-2 text-center">
                   <img
