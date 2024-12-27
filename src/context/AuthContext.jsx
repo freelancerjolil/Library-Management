@@ -1,100 +1,102 @@
 import {
-  browserLocalPersistence,
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
-  setPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateProfile,
 } from 'firebase/auth';
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import axios from '../axios/axiosInstance';
 import { auth } from '../firebase/firebase.config';
 
-export const AuthContext = createContext();
+const googleProvider = new GoogleAuthProvider();
+
+const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setPersistence(auth, browserLocalPersistence)
-      .then(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-          if (currentUser) {
-            setUser({
-              ...currentUser, // This includes all the user data from Firebase, including photoURL
-              photoURL: currentUser.photoURL || 'default-photo-url.jpg', // Optional fallback to default
-            });
-          } else {
-            setUser(null); // Handle case when no user is logged in
-          }
-          setLoading(false);
-        });
+  // Create a new user (Register)
+  const createUser = (email, password) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password).finally(() => {
+      setLoading(false);
+    });
+  };
 
-        return () => unsubscribe(); // Clean up the listener on unmount
-      })
-      .catch((error) => {
-        console.error('Error setting persistence:', error.message);
-      });
+  // Sign in an existing user
+  const signInUser = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password).finally(() => {
+      setLoading(false);
+    });
+  };
+
+  // Sign in using Google
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      setUser(user); // Properly set the user object in state
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Sign out the current user
+  const logout = () => {
+    setLoading(true);
+    return signOut(auth).finally(() => {
+      setLoading(false);
+      setUser(null);
+    });
+  };
+
+  // Monitor authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      console.log('State captured:', currentUser?.email);
+
+      if (currentUser?.email) {
+        const user = { email: currentUser.email };
+
+        axios
+          .post('/jwt', user, { withCredentials: true })
+          .then((res) => console.log('Login token:', res.data))
+          .finally(() => setLoading(false));
+      } else {
+        axios
+          .post(
+            '/logout',
+            {},
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => console.log('Logout:', res.data))
+          .finally(() => setLoading(false));
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
-  // Register a new user (sign-up)
-  const createNewUser = (email, password) => {
-    setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  // Log in an existing user (email/password)
-  const userLogin = (email, password) => {
-    setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
-  };
-
-  // Login with Google
-  const googleLogin = async () => {
-    setLoading(true);
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      return result;
-    } catch (error) {
-      console.error('Google login error:', error.message);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Log out the current user
-  const logout = async () => {
-    setLoading(true);
-    try {
-      await signOut(auth);
-      setUser(null); // Explicitly clear user after logout
-    } catch (error) {
-      console.error('Logout failed:', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Update user's profile information
-  const updateUserProfile = (updatedData) => {
-    return updateProfile(auth.currentUser, updatedData);
-  };
-
-  // Context value to be provided to children components
   const authInfo = {
     user,
-    setUser, // You may not need this in your components if you don't need to manually update `user`
-    createNewUser,
-    userLogin,
-    googleLogin,
-    logout,
+    setUser,
     loading,
-    updateUserProfile,
+    createUser,
+    signInUser,
+    signInWithGoogle,
+    logout,
   };
 
   return (
@@ -102,7 +104,7 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export default AuthProvider;
+export { AuthContext, AuthProvider };
 
-// Custom hook to use AuthContext in other components
+// Hook for using the AuthContext
 export const useAuth = () => useContext(AuthContext);

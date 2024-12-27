@@ -1,11 +1,11 @@
 import React from 'react';
-import BorrowBook from '../components/BorrowBook';
+import BorrowedBook from '../components/BorrowedBook';
 
 const BorrowedBooks = () => {
   return (
     <div>
       <section>
-        <BorrowBook></BorrowBook>
+        <BorrowedBook></BorrowedBook>
       </section>
     </div>
   );

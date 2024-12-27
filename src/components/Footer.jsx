@@ -31,16 +31,16 @@ const Footer = () => {
             </li>
             <li>
               <a href="/categories" className="hover:underline">
-                Categories
+                All Books
               </a>
             </li>
             <li>
-              <a href="/borrowed-books" className="hover:underline">
+              <a href="/borrowedbooks" className="hover:underline">
                 Borrowed Books
               </a>
             </li>
             <li>
-              <a href="/login" className="hover:underline">
+              <a href="/signin" className="hover:underline">
                 Login
               </a>
             </li>

@@ -2,12 +2,12 @@ import { createBrowserRouter } from 'react-router-dom';
 import AddBooks from '../components/AddBooks';
 import BookCategories from '../components/BookCategories';
 import BooksByCategory from '../components/BooksByCategory';
+import BorrowedBook from '../components/BorrowedBook';
 import UpdateBooks from '../components/UpdateBooks';
 import MainLayout from '../layouts/MainLayout';
 import AddBook from '../pages/AddBook';
 import AllBooks from '../pages/AllBooks';
 import BookDetails from '../pages/BookDetails';
-import BorrowedBooks from '../pages/BorrowedBooks';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -20,9 +20,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home></Home>,
+        element: <Home></Home>, // Home page with dynamic content
       },
 
+      // **All Books** (Accessible only for authenticated users)
       {
         path: '/allbooks',
         element: (
@@ -30,11 +31,12 @@ const router = createBrowserRouter([
             <AllBooks></AllBooks>
           </ProtectedRoute>
         ),
-        // loader: () =>
-        //   handleFetchError(fetch(`${API_URL}/books?page=0&size=10`)),
+        // loader: () => fetchBooks(),  // You can add loader if needed for fetching books data
       },
+
+      // **Add Books** (Only for Admins)
       {
-        path: '/books',
+        path: '/addbook',
         element: (
           <ProtectedRoute>
             <AddBooks></AddBooks>
@@ -42,6 +44,7 @@ const router = createBrowserRouter([
         ),
       },
 
+      // **Update Books** (Only for Admins)
       {
         path: '/update-book/:id',
         element: (
@@ -51,16 +54,19 @@ const router = createBrowserRouter([
         ),
       },
 
+      // **Book Categories**
       {
         path: '/category',
-        element: <BookCategories></BookCategories>,
+        element: <BookCategories></BookCategories>, // List of book categories
       },
 
+      // **Books By Category**
       {
         path: '/category/:category',
-        element: <BooksByCategory></BooksByCategory>,
+        element: <BooksByCategory></BooksByCategory>, // List books by selected category
       },
 
+      // **Book Details** (Protected route for authenticated users)
       {
         path: '/book/:id',
         element: (
@@ -70,6 +76,7 @@ const router = createBrowserRouter([
         ),
       },
 
+      // **Add Book Page** (for admins to add a new book)
       {
         path: '/addbook',
         element: (
@@ -79,28 +86,38 @@ const router = createBrowserRouter([
         ),
       },
 
+      // **Borrowed Books** (User's borrowed books)
+      // {
+      //   path: '/borrowedbooks',
+      //   element: (
+      //     <ProtectedRoute>
+      //       <BorrowedBooks></BorrowedBooks>
+      //     </ProtectedRoute>
+      //   ),
+      // },
       {
         path: '/borrowedbooks',
-        element: (
-          <ProtectedRoute>
-            <BorrowedBooks></BorrowedBooks>
-          </ProtectedRoute>
-        ),
+        element: <BorrowedBook></BorrowedBook>,
       },
 
+      // **Register** (Public route for user registration)
       {
         path: '/register',
         element: <Register></Register>,
       },
+
+      // **Login** (Public route for user login)
       {
         path: '/signin',
         element: <Login></Login>,
       },
 
-      //   {
-      //     path: '*',
-      //     element: <ErrorPage></ErrorPage>,
-      //   },
+      // **404 Page Not Found**
+      // Uncomment this if you want a custom 404 page for unmatched routes
+      // {
+      //   path: '*',
+      //   element: <ErrorPage></ErrorPage>,
+      // },
     ],
   },
 ]);

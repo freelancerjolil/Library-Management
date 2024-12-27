@@ -1,30 +1,51 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 
-const BorrowModal = ({ book, closeModal }) => {
+const BorrowModal = ({ book, isOpen, onClose, onBorrow }) => {
   const [returnDate, setReturnDate] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = async () => {
-    try {
-      await axios.put(`/borrow/${book._id}`, { returnDate });
-      closeModal();
-    } catch (error) {
-      console.error('Error borrowing the book:', error);
+  const handleSubmit = () => {
+    if (!returnDate) {
+      setError('Please select a return date.');
+      return;
     }
+    setError('');
+    onBorrow({ returnDate });
   };
 
+  if (!isOpen) return null;
+
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Borrow {book.title}</h2>
-        <label>Return Date</label>
-        <input
-          type="date"
-          value={returnDate}
-          onChange={(e) => setReturnDate(e.target.value)}
-        />
-        <button onClick={handleSubmit}>Borrow</button>
-        <button onClick={closeModal}>Close</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg shadow-lg w-96 p-6">
+        <h2 className="text-lg font-semibold mb-4">Borrow Book</h2>
+        <p className="mb-4">
+          You are borrowing: <strong>{book.name}</strong>
+        </p>
+        <label className="block mb-4 font-medium">
+          Select Return Date:
+          <input
+            type="date"
+            className="block w-full border border-gray-300 rounded mt-1 p-2"
+            value={returnDate}
+            onChange={(e) => setReturnDate(e.target.value)}
+          />
+        </label>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        <div className="flex justify-end">
+          <button
+            className="btn bg-gray-300 text-gray-800 px-4 py-2 rounded mr-2"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={handleSubmit}
+          >
+            Confirm
+          </button>
+        </div>
       </div>
     </div>
   );

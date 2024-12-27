@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { Link, useParams } from 'react-router-dom';
+import axios from '../axios/axiosInstance';
 
 const BooksByCategory = () => {
   const { category } = useParams();
@@ -8,11 +9,11 @@ const BooksByCategory = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch books in the selected category
-    fetch(`http://localhost:5000/books/category/${category}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setBooks(data);
+    // Fetch books in the selected category using Axios
+    axios
+      .get(`/books/category/${category}`)
+      .then((response) => {
+        setBooks(response.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -42,7 +43,12 @@ const BooksByCategory = () => {
             <p className="text-sm">Author: {book.authorName}</p>
             <p className="text-sm">Category: {book.category}</p>
             <p className="text-sm">Quantity: {book.quantity}</p>
-            <ReactStars count={5} value={book.rating} edit={false} size={24} />
+            <ReactStars
+              count={5}
+              value={book.rating || 0}
+              edit={false}
+              size={24}
+            />
             <Link
               to={`/book/${book._id}`}
               className="btn w-full bg-primary hover:bg-secondary mt-4"

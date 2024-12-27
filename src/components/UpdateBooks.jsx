@@ -1,6 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import ReactStars from 'react-rating-stars-component';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from '../axios/axiosInstance';
 
 const UpdateBooks = () => {
   const { id } = useParams(); // Get the book id from the URL params
@@ -28,9 +29,12 @@ const UpdateBooks = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/books/${id}`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `https://library-management-server-theta-eight.vercel.app/books/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
         setBook(response.data); // Make sure response.data is structured as expected
       } catch (error) {
         console.error('Error fetching book details:', error);
@@ -54,12 +58,16 @@ const UpdateBooks = () => {
     setLoading(true);
 
     try {
-      await axios.put(`http://localhost:5000/books/${id}`, book, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json', // Sending JSON data
-        },
-      });
+      await axios.put(
+        `https://library-management-server-theta-eight.vercel.app/books/${id}`,
+        book,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json', // Sending JSON data
+          },
+        }
+      );
       navigate('/allbooks'); // Redirect after update
     } catch (error) {
       console.error('Error updating book:', error);
@@ -117,18 +125,7 @@ const UpdateBooks = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label className="block text-sm font-semibold">Rating</label>
-          <input
-            type="number"
-            name="rating"
-            value={book.rating || 1} // Default to 1 if undefined
-            onChange={handleChange}
-            min="1"
-            max="5"
-            className="mt-2 p-2 w-full border rounded"
-          />
-        </div>
+        <ReactStars count={5} value={book.rating || 0} edit={false} size={24} />
         <button
           type="submit"
           className="btn w-full btn-primary"

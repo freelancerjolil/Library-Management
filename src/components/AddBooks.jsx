@@ -1,11 +1,15 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { useAuth } from '../context/AuthContext'; // Import useAuth to get the user token
 
 const AddBooks = () => {
+  const { getUserToken } = useAuth(); // Access the JWT token
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); // Handle loading state
 
-  const handleAddBook = (e) => {
+  const handleAddBook = async (e) => {
     e.preventDefault();
 
     // Extract data from the form
@@ -20,9 +24,41 @@ const AddBooks = () => {
       description: form.description.value,
     };
 
-    axios.post('http://localhost:5000/books', books).then((res) => {
-      console.log(res.data);
-    });
+    // Get the JWT token for authentication
+    const token = await getUserToken();
+
+    if (!token) {
+      Swal.fire('Error', 'You are not authorized. Please log in.', 'error');
+      return;
+    }
+
+    setLoading(true);
+
+    // Make the API request to add the book
+    axios
+      .post(
+        'https://library-management-server-theta-eight.vercel.app/books',
+        books,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        Swal.fire('Success', 'Book added successfully!', 'success');
+        navigate('/allbooks'); // Redirect to the books list page
+      })
+      .catch((error) => {
+        Swal.fire(
+          'Error',
+          error.response?.data?.message || 'Something went wrong.',
+          'error'
+        );
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading state
+      });
   };
 
   return (
@@ -127,8 +163,12 @@ const AddBooks = () => {
             ></textarea>
           </div>
           <div className="form-control mt-6">
-            <button type="submit" className="btn btn-primary">
-              submit
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading ? 'Adding...' : 'Submit'}
             </button>
           </div>
         </form>

@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+// Create Axios instance with the correct base URL and withCredentials set to true
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000', // Change this to your backend URL
-  withCredentials: true, // Important to send and receive cookies with each request
+  baseURL: 'https://library-management-server-theta-eight.vercel.app', // Backend base URL
+  withCredentials: true, // Ensures cookies are sent with the request
 });
 
 export default axiosInstance;

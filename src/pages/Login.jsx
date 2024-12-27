@@ -1,4 +1,9 @@
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signInWithPopup,
+} from 'firebase/auth'; // Correct imports
 import { useContext, useRef, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { HiEye, HiEyeOff } from 'react-icons/hi'; // Password visibility icons
@@ -7,18 +12,19 @@ import { toast } from 'react-toastify';
 import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
-  const { userLogin, googleLogin, setUser } = useContext(AuthContext);
+  const { userLogin, setUser } = useContext(AuthContext); // Removed signInWithPopup from context
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
   const navigate = useNavigate();
   const emailRef = useRef();
-  const auth = getAuth();
+  const auth = getAuth(); // Firebase auth instance
+  const googleProvider = new GoogleAuthProvider(); // GoogleAuthProvider instance
 
   // Google Sign-In Handler
-  const handleGoogleLogin = () => {
-    googleLogin()
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
       .then((result) => {
         const user = result.user;
         console.log(user);
@@ -84,6 +90,7 @@ const Login = () => {
         }
       });
   };
+
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
@@ -102,8 +109,8 @@ const Login = () => {
         {/* Google Sign-In Button */}
         <div className="flex justify-center mb-6">
           <button
-            onClick={handleGoogleLogin}
-            className="btn w-full bg-base-100 border hover:bg-secondary  flex items-center justify-center py-2"
+            onClick={signInWithGoogle}
+            className="btn w-full bg-base-100 border hover:bg-secondary flex items-center justify-center py-2"
           >
             <FcGoogle className="mr-2" size={20} />
             Sign In with Google

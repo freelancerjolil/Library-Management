@@ -1,10 +1,10 @@
 import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
-// Category data with names and images
 const categories = [
   {
-    name: 'Nobel',
+    name: 'Novel',
     image: 'https://i.ibb.co/wBDnR26/466630-booksbymuhammadyunus.jpg',
   },
   { name: 'Drama', image: 'https://i.ibb.co/PjHpjxK/images.jpg' },
@@ -23,15 +23,12 @@ const BookCategories = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="container mx-auto my-6">
-      <h1 className="text-2xl font-bold mb-8 text-center">
-        Explore Book Categories
-      </h1>
+    <div className=" mx-auto mt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {categories.map((category, index) => (
           <div
             key={index}
-            className="card shadow-lg cursor-pointer"
+            className="card  cursor-pointer"
             onClick={() => navigate(`/category/${category.name}`)}
           >
             <img
