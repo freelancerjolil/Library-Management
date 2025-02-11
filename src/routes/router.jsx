@@ -8,6 +8,7 @@ import MainLayout from '../layouts/MainLayout';
 import AddBook from '../pages/AddBook';
 import AllBooks from '../pages/AllBooks';
 import BookDetails from '../pages/BookDetails';
+import ErrorPage from '../pages/ErrorPage';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -86,15 +87,6 @@ const router = createBrowserRouter([
         ),
       },
 
-      // **Borrowed Books** (User's borrowed books)
-      // {
-      //   path: '/borrowedbooks',
-      //   element: (
-      //     <ProtectedRoute>
-      //       <BorrowedBooks></BorrowedBooks>
-      //     </ProtectedRoute>
-      //   ),
-      // },
       {
         path: '/borrowedbooks',
         element: <BorrowedBook></BorrowedBook>,
@@ -113,11 +105,11 @@ const router = createBrowserRouter([
       },
 
       // **404 Page Not Found**
-      // Uncomment this if you want a custom 404 page for unmatched routes
-      // {
-      //   path: '*',
-      //   element: <ErrorPage></ErrorPage>,
-      // },
+
+      {
+        path: '*',
+        element: <ErrorPage></ErrorPage>,
+      },
     ],
   },
 ]);

@@ -22,7 +22,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar border-b-2 border-primary">
+    <div className="navbar w-full mx-auto border-b-2 border-primary px-24">
       {/* Navbar Start */}
       <div className="navbar-start flex items-center gap-4">
         <NavLink to="/" className="flex items-center gap-2">
@@ -111,7 +111,7 @@ const Navbar = () => {
           <>
             <Link
               to="/signin"
-              className="px-6 py-2 bg-secondary text-white hover:bg-primary rounded hidden lg:block"
+              className="px-6 py-2 border-2 border-secondary text-secondary hover:bg-secondary hover:text-white rounded hidden lg:block"
             >
               Login
             </Link>

@@ -1,11 +1,14 @@
 import Banner from '../components/Banner';
 import BookCategories from '../components/BookCategories';
+import CallToAction from '../components/CallToAction';
+import FeaturedBooks from '../components/FeaturedBooks';
 import PopularBooks from '../components/PopularBooks';
+import StatsCounter from '../components/StatsCounter';
 
 const Home = () => {
   return (
     <div>
-      <section>
+      <section className="w-full">
         <Banner></Banner>
       </section>
       <section>
@@ -15,7 +18,13 @@ const Home = () => {
         <BookCategories></BookCategories>
       </section>
       <section className="py-10">
-        <PopularBooks></PopularBooks>
+        <FeaturedBooks></FeaturedBooks>
+      </section>
+      <section>
+        <StatsCounter></StatsCounter>
+      </section>
+      <section>
+        <CallToAction></CallToAction>
       </section>
     </div>
   );

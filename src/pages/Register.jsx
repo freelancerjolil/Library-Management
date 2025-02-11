@@ -7,7 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../context/AuthContext';
 
 const Register = () => {
+  // Context values for authentication
   const { createNewUser, setUser, updateUserProfile } = useContext(AuthContext);
+
+  // State variables for user input and status
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -15,9 +18,11 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [photo, setPhoto] = useState('');
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const auth = getAuth();
 
+  // Handle password input and validate its strength
   const handlePasswordChange = (e) => {
     const passwordValue = e.target.value;
     setPassword(passwordValue);
@@ -34,13 +39,22 @@ const Register = () => {
     if (!passwordValue) setError('');
   };
 
+  // Generic handler for input changes and resetting errors
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    setError('');
+  };
+
+  // Handle form submission for user registration
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Prevent submission if there's an error or incomplete input
     if (error || !email || !password || !name || !photo) {
       toast.error('Please check your inputs.', {
         position: 'top-center',
         autoClose: 5000,
+        toastId: 'register-error',
       });
       return;
     }
@@ -51,12 +65,17 @@ const Register = () => {
       .then((result) => {
         const user = result.user;
         setUser(user);
-        return updateUserProfile({ displayName: name, photoURL: photo });
+        // Update user profile with name and photo
+        return updateUserProfile({
+          displayName: name,
+          photoURL: photo || 'https://example.com/default-avatar.png', // Use default avatar if none provided
+        });
       })
       .then(() => {
         toast.success('Registration successful! Redirecting to Home page.', {
           position: 'top-center',
           autoClose: 3000,
+          toastId: 'register-success',
         });
         navigate('/');
       })
@@ -66,6 +85,7 @@ const Register = () => {
         toast.error('Failed to create account. Please try again.', {
           position: 'top-center',
           autoClose: 5000,
+          toastId: 'register-fail',
         });
       })
       .finally(() => {
@@ -73,12 +93,14 @@ const Register = () => {
       });
   };
 
+  // Track authentication state and handle redirects for logged-in users
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) navigate('/'); // Redirect logged-in users
     });
     return () => unSubscribe();
-  }, [auth, setUser]);
+  }, [auth, setUser, navigate]);
 
   return (
     <div className="h-full lg:min-h-screen bg-[#F7F8FA] flex justify-center items-center">
@@ -90,6 +112,7 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name Input */}
           <div className="form-control">
             <label className="label">
               <span className="label-text text-[#134479]">Full Name</span>
@@ -100,11 +123,12 @@ const Register = () => {
               placeholder="Your Name"
               className="input input-bordered"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleInputChange(setName)}
               required
             />
           </div>
 
+          {/* Photo URL Input */}
           <div className="form-control">
             <label className="label">
               <span className="label-text text-[#134479]">Photo URL</span>
@@ -112,14 +136,15 @@ const Register = () => {
             <input
               name="photo"
               type="text"
-              placeholder="photo-url"
+              placeholder="Photo URL"
               className="input input-bordered"
               value={photo}
-              onChange={(e) => setPhoto(e.target.value)}
+              onChange={handleInputChange(setPhoto)}
               required
             />
           </div>
 
+          {/* Email Input */}
           <div className="form-control">
             <label className="label">
               <span className="label-text text-[#134479]">Email</span>
@@ -130,11 +155,12 @@ const Register = () => {
               placeholder="e-mail@mail.com"
               className="input input-bordered"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInputChange(setEmail)}
               required
             />
           </div>
 
+          {/* Password Input with Toggle Visibility */}
           <div className="form-control">
             <label className="label">
               <span className="label-text text-[#134479]">Password</span>
@@ -143,7 +169,7 @@ const Register = () => {
               <input
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="password"
+                placeholder="Password"
                 className="input input-bordered w-full"
                 value={password}
                 onChange={handlePasswordChange}
@@ -151,6 +177,7 @@ const Register = () => {
               />
               <span
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -159,6 +186,7 @@ const Register = () => {
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
 
+          {/* Submit Button */}
           <div className="form-control mt-6">
             <button
               className="btn bg-[#21B1E6] text-white hover:bg-[#1e9dcb] w-full"
@@ -171,6 +199,7 @@ const Register = () => {
           </div>
         </form>
 
+        {/* Link to Login */}
         <p className="text-center mt-4 font-semibold">
           Already Have An Account?{' '}
           <Link to="/signin" className="text-[#21B1E6] hover:underline">

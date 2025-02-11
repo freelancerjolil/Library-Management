@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,11 +15,10 @@ const BookDetails = () => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch book details based on book ID using Axios
     const fetchBookDetails = async () => {
       try {
         const response = await axiosInstance.get(`/books/${id}`, {
-          withCredentials: true, // Ensure cookies are sent with the request
+          withCredentials: true,
         });
         setBook(response.data);
       } catch (error) {
@@ -81,43 +81,48 @@ const BookDetails = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg">
+      <motion.div
+        className="flex flex-col md:flex-row bg-white shadow-xl rounded-lg overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
         {/* Book Image */}
         <div className="w-full md:w-1/3">
           <img
             src={book.image}
             alt={book.name}
-            className="w-full h-full object-cover rounded-l-lg"
+            className="w-full h-full object-cover rounded-t-lg md:rounded-l-lg"
           />
         </div>
 
         {/* Book Details */}
-        <div className="w-full md:w-2/3 p-6">
-          <h1 className="text-3xl font-semibold mb-2">{book.name}</h1>
-          <p className="text-lg text-gray-600 mb-2">
-            Author: {book.authorName}
-          </p>
-          <p className="text-lg text-gray-600 mb-2">
-            Category: {book.category}
-          </p>
-          <p className="text-lg text-gray-600 mb-2">
-            Quantity: {book.quantity}
-          </p>
-          <ReactStars
-            count={5}
-            value={book.rating || 0}
-            edit={false}
-            size={24}
-          />
+        <div className="w-full md:w-2/3 p-6 bg-gradient-to-b from-[#134479] via-[#21B1E6] to-[#2196F3] text-white rounded-b-lg md:rounded-r-lg">
+          <h1 className="text-4xl font-semibold mb-4">{book.name}</h1>
+          <p className="text-lg mb-2">Author: {book.authorName}</p>
+          <p className="text-lg mb-2">Category: {book.category}</p>
+          <p className="text-lg mb-4">Available: {book.quantity}</p>
+          <p className="text-lg mb-4">Available: {book.shortDescription}</p>
+          <p className="text-lg mb-4">Available: {book.bookContent}</p>
+          <div className="flex items-center mb-4">
+            <ReactStars
+              count={5}
+              value={book.rating || 0}
+              edit={false}
+              size={24}
+              color="#FFC107"
+              activeColor="#FFB300"
+            />
+          </div>
           <button
-            className="btn bg-primary hover:bg-secondary text-white py-2 px-4 rounded-md mt-4"
+            className="btn bg-primary hover:bg-secondary text-white py-2 px-6 rounded-md transition-all duration-300 transform hover:scale-105"
             disabled={book.quantity <= 0}
             onClick={handleBorrow}
           >
-            Borrow
+            {book.quantity > 0 ? 'Borrow' : 'Out of Stock'}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Borrow Modal */}
       {isModalOpen && (

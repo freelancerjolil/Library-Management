@@ -65,8 +65,8 @@ const BorrowedBook = () => {
             <div key={borrowedBook._id} className="border rounded-lg p-4">
               {/* Ensure borrowedBook.book contains the image, name, and category */}
               <img
-                src={borrowedBooks.book?.image} // Optional chaining to avoid errors
-                alt={borrowedBooks.book?.name}
+                src={borrowedBook.book?.image} // Access book directly from borrowedBook
+                alt={borrowedBook.book?.name}
                 className="w-full h-64 object-cover mb-4"
               />
               <h2 className="text-xl font-semibold">

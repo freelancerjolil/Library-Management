@@ -25,7 +25,8 @@ const Banner = () => {
       title: 'Join the Library',
       description:
         'Sign up today and borrow books from a wide range of topics!',
-      image: 'https://i.ibb.co.com/3f74jzK/pexels-photo-1285625.jpg',
+      image:
+        'https://i.ibb.co.com/DRsrvvS/banner-horizontal-online-library-young-man-in-laptop-looking-for-e-book-against-the-background-of-th.jpg',
     },
   ];
 
