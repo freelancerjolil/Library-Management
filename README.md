@@ -1,5 +1,4 @@
 # 📚 Library Management Client
-<<<<<<< HEAD
 
 > A React-based Library System
 >
