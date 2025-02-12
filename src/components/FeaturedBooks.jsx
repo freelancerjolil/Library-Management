@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const books = [
   {
@@ -25,21 +26,21 @@ const books = [
     rating: 4.9,
   },
   {
-    id: 3,
+    id: 4,
     title: 'To Kill a Mockingbird',
     author: 'Harper Lee',
     image: 'https://i.ibb.co.com/XsjkXcc/71-Nvk-Zxn-f-L-SL1360.jpg',
     rating: 4.9,
   },
   {
-    id: 3,
+    id: 5,
     title: 'Dune',
     author: 'Frank Herbert',
     image: 'https://i.ibb.co.com/Jt50h6f/81v-Jyslg3q-L-UF1000-1000-QL80.jpg',
     rating: 4.9,
   },
   {
-    id: 4,
+    id: 6,
     title: 'The Family Secret',
     author: 'J.D. Salinger',
     image: 'https://i.ibb.co.com/Cvc5bHV/8123m-Osk1-QL-UF1000-1000-QL80.jp.jpg',
@@ -60,7 +61,7 @@ const FeaturedBooks = () => {
         {books.map((book, index) => (
           <motion.div
             key={book.id}
-            className="bg-base-100 rounded-lg shadow-md p-4 min-w-[250px] hover:shadow-lg transition-shadow"
+            className="bg-base-100 rounded-lg shadow-md p-4 min-w-[250px] hover:shadow-2xl transform transition-shadow"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.2, duration: 0.5 }}
@@ -70,8 +71,9 @@ const FeaturedBooks = () => {
               src={book.image}
               alt={book.title}
               className="w-full h-40 object-cover rounded-t-lg"
+              loading="lazy"
             />
-            <div className="mt-4">
+            <div className="mt-4 p-2 bg-white bg-opacity-80 rounded-b-lg">
               <h3 className="text-xl font-semibold text-primary">
                 {book.title}
               </h3>
@@ -83,6 +85,16 @@ const FeaturedBooks = () => {
             </div>
           </motion.div>
         ))}
+      </div>
+
+      {/* View More Button */}
+      <div className="text-center mt-8">
+        <Link
+          to="/featured-books"
+          className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-accent transition-colors"
+        >
+          View More
+        </Link>
       </div>
     </div>
   );

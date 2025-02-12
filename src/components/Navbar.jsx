@@ -57,11 +57,6 @@ const Navbar = () => {
           <NavLink to="/borrowedbooks" className={getActiveLinkClass}>
             Borrowed Books
           </NavLink>
-          {user && (
-            <NavLink to="/dashboard" className={getActiveLinkClass}>
-              Dashboard
-            </NavLink>
-          )}
         </div>
 
         {/* User Profile or Login/Sign-up */}
@@ -145,15 +140,7 @@ const Navbar = () => {
             >
               Borrowed Books
             </NavLink>
-            {user && (
-              <NavLink
-                to="/dashboard"
-                className="block px-4 py-2 hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Dashboard
-              </NavLink>
-            )}
+
             {user ? (
               <button
                 onClick={handleLogout}

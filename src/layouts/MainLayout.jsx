@@ -10,7 +10,7 @@ const MainLayout = () => {
       <nav className="w-full border-b-2 border-primary">
         <Navbar></Navbar>
       </nav>
-      <main className="min-h-screen w-full lg:w-11/12 mx-auto">
+      <main className="min-h-screen w-full lg:container mx-auto">
         <Outlet></Outlet>
       </main>
       <Footer></Footer>
