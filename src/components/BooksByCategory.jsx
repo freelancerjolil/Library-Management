@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { Link, useParams } from 'react-router-dom';
 import axios from '../axios/axiosInstance';
+import LoadingSpinner from './LoadingSpinner';
 
 const BooksByCategory = () => {
   const { category } = useParams();
@@ -23,7 +24,7 @@ const BooksByCategory = () => {
   }, [category]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (

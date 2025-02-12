@@ -4,17 +4,29 @@ import axiosInstance from '../axios/axiosInstance';
 
 const BorrowedBook = () => {
   const [borrowedBooks, setBorrowedBooks] = useState([]);
-  const [loading, setLoading] = useState(true); // Track loading state
-  const [error, setError] = useState(null); // Track errors
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch borrowed books when the component mounts
+  // Fetch borrowed books
   useEffect(() => {
     const fetchBorrowedBooks = async () => {
       try {
-        const response = await axiosInstance.get('/borrow');
-        console.log(response.data);
-        setBorrowedBooks(response.data);
+        const response = await axiosInstance.get('/borrow', {
+          withCredentials: true,
+        });
+
+        // Fetch book details for each borrowed book
+        const booksWithDetails = await Promise.all(
+          response.data.map(async (borrowedBook) => {
+            const bookResponse = await axiosInstance.get(
+              `/books/${borrowedBook.bookId}`
+            );
+            return { ...borrowedBook, book: bookResponse.data };
+          })
+        );
+
+        setBorrowedBooks(booksWithDetails);
       } catch (error) {
         setError('Error fetching borrowed books');
         console.error('Error fetching borrowed books:', error);
@@ -22,20 +34,20 @@ const BorrowedBook = () => {
         setLoading(false);
       }
     };
+
     fetchBorrowedBooks();
   }, []);
 
   // Handle book return
   const handleReturn = async (borrowedBookId) => {
     try {
-      // Call the backend API to return the book
       await axiosInstance.put(
         `/return/${borrowedBookId}`,
         {},
         { withCredentials: true }
       );
 
-      // Update local state by removing the returned book
+      // Remove the returned book from UI
       setBorrowedBooks((prevBooks) =>
         prevBooks.filter((book) => book._id !== borrowedBookId)
       );
@@ -45,47 +57,53 @@ const BorrowedBook = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Loading spinner or message
+    return <div className="text-center text-lg">Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Display error message if API call fails
+    return <div className="text-center text-red-500">{error}</div>;
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-4">
       <h1 className="text-3xl font-bold mt-4 text-center">Borrowed Books</h1>
 
-      {/* Display borrowed books */}
       {borrowedBooks.length === 0 ? (
-        <p className="text-center">You have no borrowed books.</p>
+        <p className="text-center mt-4 text-gray-600">
+          You have no borrowed books.
+        </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
           {borrowedBooks.map((borrowedBook) => (
-            <div key={borrowedBook._id} className="border rounded-lg p-4">
-              {/* Ensure borrowedBook.book contains the image, name, and category */}
+            <div
+              key={borrowedBook._id}
+              className="bg-white shadow-md rounded-lg p-4"
+            >
               <img
-                src={borrowedBook.book?.image} // Access book directly from borrowedBook
+                src={
+                  borrowedBook.book?.image || 'https://via.placeholder.com/150'
+                }
                 alt={borrowedBook.book?.name}
-                className="w-full h-64 object-cover mb-4"
+                className="w-full h-64 object-cover rounded-md"
               />
-              <h2 className="text-xl font-semibold">
+              <h2 className="text-xl font-semibold mt-2">
                 {borrowedBook.book?.name}
               </h2>
-              <p className="text-sm">Category: {borrowedBook.book?.category}</p>
-              <p className="text-sm">
+              <p className="text-sm text-gray-600">
+                Category: {borrowedBook.book?.category}
+              </p>
+              <p className="text-sm text-gray-600">
                 Borrowed Date:{' '}
                 {new Date(borrowedBook.borrowedAt).toLocaleDateString()}
               </p>
-              <p className="text-sm">
+              <p className="text-sm text-gray-600">
                 Return Date:{' '}
                 {new Date(borrowedBook.returnDate).toLocaleDateString()}
               </p>
 
-              {/* Return Book Button */}
               <button
                 onClick={() => handleReturn(borrowedBook._id)}
-                className="btn btn-primary mt-4"
+                className="bg-red-500 text-white py-2 px-4 rounded-md mt-4 hover:bg-red-600 transition"
               >
                 Return
               </button>

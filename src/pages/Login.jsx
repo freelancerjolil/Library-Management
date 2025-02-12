@@ -12,72 +12,59 @@ import { toast } from 'react-toastify'; // For showing toast notifications
 import { AuthContext } from '../context/AuthContext'; // Custom AuthContext for managing user state
 
 const Login = () => {
-  // Destructuring to get userLogin and setUser from context
   const { userLogin, setUser } = useContext(AuthContext);
-
-  // States for form fields, password visibility, and loading state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Navigation and location hooks from React Router
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Reference for email input field
   const emailRef = useRef();
 
-  // Firebase authentication instance and Google provider
   const auth = getAuth();
   const googleProvider = new GoogleAuthProvider();
 
-  // Email validation regex
   const emailValidation = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  // Google Sign-In handler
   const signInWithGoogle = () => {
-    setLoading(true); // Set loading state to true while signing in
+    setLoading(true);
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const user = result.user;
-        setUser(user); // Set user to context after successful sign-in
-        toast.success(`Welcome, ${user.displayName || 'User'}!`); // Show success message
-        navigate(location?.state ? location.state : '/'); // Redirect to the previous page or home
+        setUser(user);
+        toast.success(`Welcome, ${user.displayName || 'User'}!`);
+        navigate(location?.state ? location.state : '/');
       })
       .catch((error) => {
         console.error('Google Sign-In Error:', error.message);
-        toast.error('Google Sign-In failed. Please try again.'); // Show error message on failure
+        toast.error('Google Sign-In failed. Please try again.');
       })
-      .finally(() => setLoading(false)); // Reset loading state after process is finished
+      .finally(() => setLoading(false));
   };
 
-  // Form submit handler for email/password login
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page reload on form submit
-    setLoading(true); // Set loading state to true while submitting
+    e.preventDefault();
+    setLoading(true);
 
-    // Check if email or password is empty
     if (!email || !password) {
-      toast.error('Email and Password are required.'); // Show error if fields are empty
-      setLoading(false); // Reset loading state
-      return;
-    }
-
-    // Validate email format
-    if (!emailValidation.test(email)) {
-      toast.error('Please enter a valid email address.'); // Show error if email is invalid
+      toast.error('Email and Password are required.');
       setLoading(false);
       return;
     }
 
-    // Attempt login with provided email and password
+    if (!emailValidation.test(email)) {
+      toast.error('Please enter a valid email address.');
+      setLoading(false);
+      return;
+    }
+
     userLogin(email, password)
       .then((result) => {
         const user = result.user;
-        setUser(user); // Set user in context on successful login
-        toast.success('Login Successful!'); // Show success message
-        navigate(location?.state ? location.state : '/'); // Redirect to the previous page or home
+        setUser(user);
+        toast.success('Login Successful!');
+        navigate(location?.state ? location.state : '/');
       })
       .catch((error) => {
         console.error('Login Error:', error.message);
@@ -87,22 +74,19 @@ const Login = () => {
             : error.code === 'auth/user-not-found'
             ? 'No account found with this email.'
             : 'Failed to login. Please check your credentials.'
-        ); // Show error message depending on error code
+        );
       })
-      .finally(() => setLoading(false)); // Reset loading state
+      .finally(() => setLoading(false));
   };
 
-  // Handle forget password action
   const handleForgetPassword = () => {
     const email = emailRef.current.value;
 
-    // Validate email format before sending password reset email
     if (!email || !emailValidation.test(email)) {
       toast.error('Please enter a valid email address!');
       return;
     }
 
-    // Send password reset email
     sendPasswordResetEmail(auth, email)
       .then(() => {
         toast.success('Password reset email sent! Check your inbox.');
@@ -110,8 +94,6 @@ const Login = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-
-        // Handle specific Firebase errors
         if (errorCode === 'auth/user-not-found') {
           toast.error('No user found with this email address.');
         } else if (errorCode === 'auth/invalid-email') {
@@ -122,19 +104,17 @@ const Login = () => {
       });
   };
 
-  // Handlers for email and password input changes
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  // Toggle password visibility
   const togglePasswordVisibility = () =>
     setShowPassword((prevState) => !prevState);
 
   return (
     <div className="h-full bg-neutral flex justify-center items-center py-4 lg:py-10">
-      <div className="card bg-white shadow-sm w-full max-w-md p-8 rounded-lg">
+      <div className="card bg-white shadow-sm w-full lg:w-1/3 max-w-md p-8 rounded-lg">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold text-primary mt-4">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-primary mt-4">
             Welcome to EduShelf
           </h2>
         </div>
@@ -143,12 +123,11 @@ const Login = () => {
         <div className="flex justify-center mb-6">
           <button
             onClick={signInWithGoogle}
-            className="btn w-full bg-base-100 border hover:bg-secondary flex items-center justify-center py-2"
-            disabled={loading} // Disable button while loading
+            className="btn w-full h-12 bg-base-100 border hover:bg-secondary flex items-center justify-center py-2"
+            disabled={loading}
           >
             <FcGoogle className="mr-2" size={20} />
-            {loading ? 'Signing In...' : 'Sign In with Google'}{' '}
-            {/* Change text based on loading state */}
+            {loading ? 'Signing In...' : 'Sign In with Google'}
           </button>
         </div>
 
@@ -161,7 +140,7 @@ const Login = () => {
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="form-control">
+          <div className="form-control mb-4">
             <label className="label" htmlFor="email">
               <span className="label-text text-primary">Email Address</span>
             </label>
@@ -177,7 +156,7 @@ const Login = () => {
               required
             />
           </div>
-          <div className="form-control">
+          <div className="form-control mb-4">
             <label className="label" htmlFor="password">
               <span className="label-text text-primary">Password</span>
             </label>
@@ -194,12 +173,12 @@ const Login = () => {
               />
               <span
                 onClick={togglePasswordVisibility}
-                className="absolute text-secondary right-3 top-[33%] transform -translate-y-1/2 cursor-pointer"
+                className="absolute text-secondary right-3 top-[30%] transform -translate-y-1/2 cursor-pointer"
                 aria-label={showPassword ? 'Hide Password' : 'Show Password'}
               >
                 {showPassword ? <HiEyeOff size={24} /> : <HiEye size={24} />}
               </span>
-              <div className="flex justify-end items-end pt-2">
+              <div className="flex justify-start items-start pt-2">
                 <label onClick={handleForgetPassword} className="label">
                   <a
                     href="#"
@@ -216,10 +195,9 @@ const Login = () => {
             <button
               type="submit"
               className="btn text-textPrimary hover:bg-secondary w-full"
-              disabled={loading} // Disable button while loading
+              disabled={loading}
             >
-              {loading ? 'Logging in...' : 'Log In'}{' '}
-              {/* Change text based on loading state */}
+              {loading ? 'Logging in...' : 'Log In'}
             </button>
           </div>
         </form>
