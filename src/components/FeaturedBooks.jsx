@@ -90,7 +90,7 @@ const FeaturedBooks = () => {
       {/* View More Button */}
       <div className="text-center mt-8">
         <Link
-          to="/featured-books"
+          to="/allbooks"
           className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-accent transition-colors"
         >
           View More
